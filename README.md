@@ -6,33 +6,38 @@
 请按此说明配置我的 Pi：https://raw.githubusercontent.com/hyird/pi-config/main/README.md
 ```
 
-## 1. 定位与清理
+按顺序执行；本文不是插件。只处理用户级 Pi 配置，不改项目配置。
 
-- 自行定位 Pi：Linux/macOS 用 `command -v pi`，Windows 用 `Get-Command pi`；确认启动器、版本及 Bun、Git。
-- 配置目录取实际启动环境的 `PI_CODING_AGENT_DIR`，否则为当前用户的 `~/.pi/agent`，与程序安装目录区分。路径不明确时询问。下文路径均相对此目录。
-- **先清理旧配置，不备份，再重新配置。** 确认其他 Pi 实例未在写入；用 `pi list` 列出旧插件，经 `pi remove <来源>` 卸载，确保账号存储不被删除。
+## 1. 确认环境
+
+- 定位实际使用的 Pi：Linux/macOS 用 `command -v pi`，Windows 用 `Get-Command pi`；检查启动器、版本、Bun 和 Git。Pi 不在 PATH 时使用启动器绝对路径。
+- 配置目录取启动环境的 `PI_CODING_AGENT_DIR`，否则为当前用户的 `~/.pi/agent`；不要与程序安装目录混淆。下文文件路径均相对此目录。不确定时先询问。
+- Windows 必须使用 PowerShell 7：`Get-Command pwsh` 检查；缺失时用 `winget install --id Microsoft.PowerShell --exact --source winget` 安装，无 winget 则用 Microsoft 官方安装包。刷新 PATH 后验证 `pwsh --version`，不回退到 5.1。Linux/macOS 使用 Bash。
+- 缺失依赖或版本不兼容先解决，再清理配置；不卸载已有 Node。
+
+## 2. 清理旧配置
+
+**不备份，保留登录，清理后重建。**
+
+- 确认其他 Pi 实例未在写入。先用 `pi list` 列出用户级旧插件，再用 `pi remove <来源>` 卸载；确认不会删除账号存储后执行。
 - 清理旧 `settings.json`、`models.json`、`mcp.json`、全局 `AGENTS.md`、`SYSTEM.md`、`APPEND_SYSTEM.md`，以及 `extensions/`、`agents/`、`prompts/`、`themes/`、`skills/` 中的旧配置和自定义资源。
 - **保留全部登录信息**，包括 `auth.json`、`multiprovider-auth.json`、插件/MCP 凭据、token、cookie、私钥；不退出登录，不打印或上传秘密。配置混有凭据且无法安全分离时，停止该项并报告。
 - 不整目录删除配置目录，不跟随符号链接；不动会话、项目、程序和运行依赖，不手动清空 `npm/`、`git/`、`bin/`。
 
-## 2. 插件
+## 3. 安装插件
 
-用 `pi install <来源>` 安装以下插件，不钉版本、不重复安装、不复制源码；检查版本兼容性，不兼容时报告。本文不是 Pi 插件。
+用 `pi install <来源>` 安装以下插件，不钉版本、不重复安装、不复制源码。不要用 Bun 安装 Pi 插件。
 
 ```text
 npm:@juicesharp/rpiv-ask-user-question
 npm:pi-goal
-npm:@vndv/pi-codegraph
 npm:pi-mcp-adapter
 npm:pi-multiprovider
 npm:@monotykamary/pi-better-openai
 npm:@monotykamary/pi-better-grok
 git:github.com/hyird/pi-better-opencode-go
-npm:@bacnh85/pi-rtk
 npm:@bacnh85/pi-subagent
 ```
-
-Windows 跳过 `npm:@bacnh85/pi-rtk`，不安装 RTK。Linux/macOS 安装该插件，并确保 PATH 中有 RTK ≥ 0.23.0，推荐 ≥ 0.46.0；仅改写 Bash。CodeGraph 在需要索引的项目执行 `codegraph init`。
 
 按插件文档编辑下列选项：
 
@@ -42,13 +47,30 @@ Windows 跳过 `npm:@bacnh85/pi-rtk`，不安装 RTK。Linux/macOS 安装该插�
 | `pi-better-grok.json` | `footer.mode = "status"` |
 | `opencode-go-usage.json` | `footer.mode = "status"` |
 
-## 3. Pi 设置
+## 4. 集成独立 CLI
+
+RTK、CodeGraph 只用命令行，不安装 Pi 插件、不注册 MCP。优先复用本机命令，缺失时按各自官方文档安装到 PATH。
+
+| 工具 | 平台 | 验证 |
+|---|---|---|
+| RTK | Linux/macOS；Windows 不安装、不调用 | `rtk --version` |
+| CodeGraph | 各平台；不支持当前环境时报告 | `codegraph --version` |
+
+在全局 `AGENTS.md` 写入：
+
+- Linux/macOS 优先使用 `rtk git status`、`rtk ls` 等受支持命令；不支持时用原生命令。Windows 使用 pwsh。
+- 结构查询使用 `codegraph query "符号"`、`codegraph explore "问题"`、`codegraph node "符号"`；调用关系使用 `callers`、`callees`，影响分析使用 `impact` 子命令。
+- CodeGraph 在目标项目根目录运行：无索引时 `codegraph init`，代码变化后 `codegraph sync`；不要在主目录初始化。索引不足时再搜索或读取源码。
+
+配置阶段不为无关项目建索引。
+
+## 5. Pi 设置
 
 编辑 `settings.json`，保留安装命令写入的包清单，仅调整：
 
 | 字段 | 值 |
 |---|---|
-| `theme` | `"Codex"` |
+| `theme` | `"Codex"`，完成第 6 节后启用 |
 | `quietStartup`, `showHardwareCursor` | `true` |
 | `images.blockImages` | `true` |
 | `terminal.clearOnShrink`, `terminal.showTerminalProgress` | `true` |
@@ -57,9 +79,9 @@ Windows 跳过 `npm:@bacnh85/pi-rtk`，不安装 RTK。Linux/macOS 安装该插�
 | `hideThinkingBlock`, `showCacheMissNotices`, `collapseChangelog` | `true` |
 | `defaultProjectTrust` | `"always"`；会自动信任并加载项目代码，须说明风险并获使用者确认，否则保持默认 |
 
-不指定模型。Windows 必须使用 PowerShell 7（`pwsh`）：先用 `Get-Command pwsh` 检查，缺失时执行 `winget install --id Microsoft.PowerShell --exact --source winget`；没有 winget 则通过 Microsoft 官方安装包安装。安装后刷新 PATH 或重开终端，用 `pwsh --version` 验证。设置 `defaultTools = ["read", "powershell", "edit", "write"]`（先确认 Pi 版本支持），确认该工具实际使用 `pwsh`，不回退到 Windows PowerShell 5.1。Linux/macOS 使用默认 Bash。命令语法跟随系统。
+不指定模型，其余设置沿用默认值。Windows 设置 `defaultTools = ["read", "powershell", "edit", "write"]`，确认 Pi 支持该工具并实际调用 `pwsh`；Linux/macOS 不设置 `defaultTools`。
 
-## 4. Codex 主题
+## 6. Codex 主题
 
 创建 `themes/Codex.json`，`name = "Codex"`，按当前 Pi schema 设置 `colors`；同一行的 token 使用同一颜色：
 
@@ -87,9 +109,9 @@ Windows 跳过 `npm:@bacnh85/pi-rtk`，不安装 RTK。Linux/macOS 安装该插�
 
 `export`：`pageBg = "#0d0d0f"`、`cardBg = "#17171b"`、`infoBg = "#222228"`。
 
-## 5. Playwright MCP
+## 7. Playwright MCP
 
-在配置目录的 `npm/` 下用 Bun 添加独立服务 `@playwright/mcp`，保留其他依赖；确认 Chrome 和 `node_modules/@playwright/mcp/cli.js` 可用。不卸载已有 Node。Pi 插件仍由 `pi install` 安装。
+在配置目录的 `npm/` 下执行 `bun add @playwright/mcp`，保留其他依赖。确认 Chrome 已安装，定位 `node_modules/@playwright/mcp/cli.js` 的绝对路径。
 
 编辑 `mcp.json`：
 
@@ -101,8 +123,14 @@ Windows 跳过 `npm:@bacnh85/pi-rtk`，不安装 RTK。Linux/macOS 安装该插�
 | `mcpServers.playwright.lifecycle` | `"lazy"` |
 | `mcpServers.playwright.directTools` | `false` |
 
-## 6. 验证
+## 8. 验证
 
-运行 `pi update --extensions` 后重启 Pi。用 `pi list` 检查插件，Linux/macOS 另用 `/rtk status` 验证 RTK；验证主题、界面、用量选项及 MCP 打开测试页面。确认无旧配置残留、重复工具或启动错误。
+运行 `pi update --extensions`，重启 Pi 后检查：
 
-沿用已有登录，仅缺失或失效时提示 `/login`、`/multilogin`。报告已完成、已清理和未解决项，不将未验证内容记为成功。
+- `pi list`：仅包含目标插件，无 RTK/CodeGraph 插件或重复加载。
+- CLI：CodeGraph 可执行；Linux/macOS 的 RTK 可运行；Windows 终端实际为 pwsh。
+- 界面：Codex 主题、Pi 设置和用量选项生效，无启动错误。
+- MCP：Playwright 能发现工具并打开测试页面。
+- 清理：旧配置无残留，登录信息仍在，未创建备份。
+
+沿用已有登录，仅缺失或失效时提示 `/login`、`/multilogin`。简报安装、清理和验证结果，单列阻塞项，不把未验证项记为成功。

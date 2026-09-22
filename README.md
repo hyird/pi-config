@@ -41,11 +41,10 @@
 
 ## 3. Pi 本身的设置
 
-逐项修改 `D/settings.json`：
+`D/settings.json` 只设置以下非默认值，其余保持不变：
 
 | 字段 | 目标值 |
 |---|---|
-| `packages` | 第 2 节的十个插件，去重 |
 | `theme` | `"Codex"`，先完成第 4 节 |
 | `quietStartup` | `true` |
 | `showHardwareCursor` | `true` |
@@ -59,7 +58,7 @@
 | `collapseChangelog` | `true` |
 | `defaultProjectTrust` | 原配置为 `"always"`；会自动信任项目并允许加载项目代码，说明风险并经使用者确认后设置，否则保留原值 |
 
-模型相关设置保持使用者原样。`lastChangelogVersion` 是机器运行状态，保留本机值。
+模型相关设置保持使用者原样。
 
 Windows 在当前 Pi 支持时将 `defaultTools` 设为 `["read", "powershell", "edit", "write"]`；Linux/macOS 使用默认 Bash 工具，去掉迁移遗留的 PowerShell 专用设置。命令语法跟随实际系统；不要硬编码作者的主目录。
 
@@ -109,13 +108,7 @@ HTML 导出颜色：`export.pageBg = "#0d0d0f"`、`export.cardBg = "#17171b"`、
 
 路径按使用者系统生成，不留占位符。启动并检查 MCP 工具发现，确认能够打开测试页面；若本机 Bun、Chrome 或包版本组合不兼容，报告具体错误，不能只写好 JSON 就算完成。
 
-## 6. 独立安装的 Skills
-
-将 `https://github.com/badlogic/pi-skills.git` 克隆到 `D/skills/pi-skills`；已存在就保留，不 reset。由 Pi 自动发现，不额外添加重复的 skills 路径或 package 项。
-
-包含浏览器、搜索、Google Calendar/Drive/Gmail、转录、VS Code、YouTube 等技能。依赖按各自 `SKILL.md` 按需安装；平台不支持的技能不强行安装，账号由使用者在本机授权。后续更新使用 `git pull --ff-only`。
-
-## 7. 清理和验收
+## 6. 清理和验收
 
 - 按上述目标列出多余包、旧扩展和配置项；备份并确认清理清单后执行。
 - 多余包通过 `pi remove <来源>` 移除；不要整目录删除 `npm/`、`git/`。

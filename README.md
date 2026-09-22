@@ -16,7 +16,14 @@ Pi 程序安装位置与用户配置目录不是同一个目录。根据实际�
 
 ## 2. 安装插件
 
-对缺少的条目执行 `pi install <安装来源>`，已有条目不重复安装；使用 Bun 管理 JavaScript 依赖，不卸载其他程序依赖的 Node。Pi 包管理命令是否调用 Bun，应按当前版本确认并配置，不能只因本机有 Bun 就假定已经使用它。
+Pi 插件统一通过本机已确认的 Pi 命令管理：
+
+- 查看已安装插件：`pi list`
+- 安装缺少的插件：`pi install <安装来源>`
+- 更新插件：`pi update --extensions`
+- 移除多余插件：`pi remove <安装来源>`
+
+已有插件不重复安装。不用 `bun add`、`npm install` 或手动复制源码来代替 Pi 插件安装，也不只往 `settings.json` 写包名。若 `pi` 不在 PATH，使用已找到的 Pi 启动器路径。Bun 仅用于单独的 JavaScript 依赖，例如下文的 Playwright MCP；不要卸载其他程序依赖的 Node。
 
 | 安装来源 | 用途与配置 |
 |---|---|
@@ -98,7 +105,7 @@ HTML 导出颜色：`export.pageBg = "#0d0d0f"`、`export.cardBg = "#17171b"`、
 
 ## 5. Playwright MCP
 
-安装 `@playwright/mcp` 到配置目录下 `npm/` 的依赖中，例如进入该目录后使用 Bun 添加该包。保留该目录其他依赖，确认 `node_modules/@playwright/mcp/cli.js` 存在。检查 Chrome 是否已安装；缺失时向使用者说明并安装所需浏览器。
+`@playwright/mcp` 是独立 MCP 服务，不是 Pi 插件；`pi-mcp-adapter` 则通过上面的 `pi install` 安装。使用 Bun 安装 `@playwright/mcp` 到配置目录下 `npm/` 的依赖中，例如进入该目录后使用 Bun 添加该包。保留该目录其他依赖，确认 `node_modules/@playwright/mcp/cli.js` 存在。检查 Chrome 是否已安装；缺失时向使用者说明并安装所需浏览器。
 
 通过 `pi-mcp-adapter` 编辑配置目录中的 `mcp.json`：
 

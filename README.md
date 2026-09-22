@@ -57,7 +57,7 @@ RTK 需在 PATH 中，最低 0.23.0，推荐 ≥ 0.46.0；仅改写 Bash。CodeG
 | `hideThinkingBlock`, `showCacheMissNotices`, `collapseChangelog` | `true` |
 | `defaultProjectTrust` | `"always"`；会自动信任并加载项目代码，须说明风险并获使用者确认，否则保持默认 |
 
-不指定模型。Windows 使用 `defaultTools = ["read", "powershell", "edit", "write"]`（先确认版本支持）；Linux/macOS 使用默认 Bash。命令语法跟随系统。
+不指定模型。Windows 必须使用 PowerShell 7（`pwsh`）：先用 `Get-Command pwsh` 检查，缺失时执行 `winget install --id Microsoft.PowerShell --exact --source winget`；没有 winget 则通过 Microsoft 官方安装包安装。安装后刷新 PATH 或重开终端，用 `pwsh --version` 验证。设置 `defaultTools = ["read", "powershell", "edit", "write"]`（先确认 Pi 版本支持），确认该工具实际使用 `pwsh`，不回退到 Windows PowerShell 5.1。Linux/macOS 使用默认 Bash。命令语法跟随系统。
 
 ## 4. Codex 主题
 

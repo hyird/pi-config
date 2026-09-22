@@ -8,7 +8,11 @@
 
 ## 1. 准备
 
-配置目录记为 `D`：使用 `PI_CODING_AGENT_DIR`，未设置时为 `~/.pi/agent`。检查 Pi、Bun、Git 和操作系统；先备份将修改、删除的配置，再按下面的目标逐项编辑。本文是配置说明，不是 Pi 插件。
+先自行查找本机正在使用的 Pi：Linux/macOS 使用 `command -v pi`，Windows 使用 `Get-Command pi`，必要时检查启动器、符号链接和安装记录，确认实际程序路径与版本。同时检查 Bun、Git 和操作系统。
+
+Pi 程序安装位置与用户配置目录不是同一个目录。根据实际启动环境中的 `PI_CODING_AGENT_DIR` 确认配置目录；未设置时使用当前用户主目录下的 `.pi/agent`。检查启动器是否覆盖该环境变量，有多个安装或无法确定当前配置目录时先询问，不猜测盘符或路径。
+
+下文的文件路径均相对于已确认的 **Pi 配置目录**。先备份将修改、删除的配置，再按下面的目标逐项编辑。本文是配置说明，不是 Pi 插件。
 
 ## 2. 安装插件
 
@@ -31,7 +35,7 @@
 
 三个用量插件的本地选项：
 
-| `D/extensions/` 下的文件 | 设置 |
+| 配置目录中 `extensions/` 下的文件 | 设置 |
 |---|---|
 | `pi-better-openai.json` | `usage.autoRedeemBankedResets = false`、`footer.mode = "status"` |
 | `pi-better-grok.json` | `footer.mode = "status"` |
@@ -41,7 +45,7 @@
 
 ## 3. Pi 本身的设置
 
-`D/settings.json` 只设置以下非默认值，其余保持不变：
+配置目录中的 `settings.json` 只设置以下非默认值，其余保持不变：
 
 | 字段 | 目标值 |
 |---|---|
@@ -64,7 +68,7 @@ Windows 在当前 Pi 支持时将 `defaultTools` 设为 `["read", "powershell", 
 
 ## 4. Codex 主题
 
-Codex 是自定义主题，不是 Pi 内置主题。创建或编辑 `D/themes/Codex.json`，`name` 为 `Codex`；按照当前 Pi 主题 schema 设置下列颜色。随后选择 `theme = "Codex"`。
+Codex 是自定义主题，不是 Pi 内置主题。在配置目录中创建或编辑 `themes/Codex.json`，`name` 为 `Codex`；按照当前 Pi 主题 schema 设置下列颜色。随后选择 `theme = "Codex"`。
 
 每一行列出的 token 都使用该行颜色：
 
@@ -94,9 +98,9 @@ HTML 导出颜色：`export.pageBg = "#0d0d0f"`、`export.cardBg = "#17171b"`、
 
 ## 5. Playwright MCP
 
-安装 `@playwright/mcp` 到 `D/npm` 的依赖中，例如进入该目录后使用 Bun 添加该包。保留该目录其他依赖，确认 `node_modules/@playwright/mcp/cli.js` 存在。检查 Chrome 是否已安装；缺失时向使用者说明并安装所需浏览器。
+安装 `@playwright/mcp` 到配置目录下 `npm/` 的依赖中，例如进入该目录后使用 Bun 添加该包。保留该目录其他依赖，确认 `node_modules/@playwright/mcp/cli.js` 存在。检查 Chrome 是否已安装；缺失时向使用者说明并安装所需浏览器。
 
-通过 `pi-mcp-adapter` 配置 `D/mcp.json`：
+通过 `pi-mcp-adapter` 编辑配置目录中的 `mcp.json`：
 
 | 路径 | 值 |
 |---|---|

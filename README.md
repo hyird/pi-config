@@ -15,14 +15,15 @@
 - Windows 必须使用 PowerShell 7：`Get-Command pwsh` 检查；缺失时用 `winget install --id Microsoft.PowerShell --exact --source winget` 安装，无 winget 则用 Microsoft 官方安装包。刷新 PATH 后验证 `pwsh --version`，不回退到 5.1。Linux/macOS 使用 Bash。
 - 缺失依赖或版本不兼容先解决，再清理配置；不卸载已有 Node。
 
-## 2. 清理旧配置
+## 2. 检查与清理
 
-**不备份，保留登录，清理后重建。**
+**只清理不需要的，不备份；保留可复用配置和全部登录信息。**
 
-- 确认其他 Pi 实例未在写入。先用 `pi list` 列出用户级旧插件，再用 `pi remove <来源>` 卸载；确认不会删除账号存储后执行。
-- 清理旧 `settings.json`、`models.json`、`mcp.json`、全局 `AGENTS.md`、`SYSTEM.md`、`APPEND_SYSTEM.md`，以及 `extensions/`、`agents/`、`prompts/`、`themes/`、`skills/` 中的旧配置和自定义资源。
-- **保留全部登录信息**，包括 `auth.json`、`multiprovider-auth.json`、插件/MCP 凭据、token、cookie、私钥；不退出登录，不打印或上传秘密。配置混有凭据且无法安全分离时，停止该项并报告。
-- 不整目录删除配置目录，不跟随符号链接；不动会话、项目、程序和运行依赖，不手动清空 `npm/`、`git/`、`bin/`。
+- 用 `pi list` 对照下方清单：已有目标插件保留，仅安装缺失项；确认不再需要的插件用 `pi remove <来源>` 移除，不先卸载再重装。
+- 移除 RTK、CodeGraph 的 Pi 插件及重复的旧扩展/MCP 注册，保留独立 CLI。
+- 配置按字段调整，只删除确认无用、失效或重复的项；不清空配置文件或资源目录。模型设置不调整，有独立用途或无法判断的项先询问。
+- 保留 `auth.json`、`multiprovider-auth.json` 及插件/MCP 的凭据、token、cookie、私钥；不退出登录，不打印或上传秘密。无法安全分离凭据时停止该项清理并报告。
+- 确认其他 Pi 实例未在写入。不跟随符号链接，不动会话、项目、程序及运行依赖，不手动清空 `npm/`、`git/`、`bin/`。
 
 ## 3. 安装插件
 
@@ -56,7 +57,7 @@ RTK、CodeGraph 只用命令行，不安装 Pi 插件、不注册 MCP。优先�
 | RTK | Linux/macOS；Windows 不安装、不调用 | `rtk --version` |
 | CodeGraph | 各平台；不支持当前环境时报告 | `codegraph --version` |
 
-在全局 `AGENTS.md` 写入：
+在全局 `AGENTS.md` 补充以下规则，保留无关内容，已有规则不重复添加：
 
 - Linux/macOS 优先使用 `rtk git status`、`rtk ls` 等受支持命令；不支持时用原生命令。Windows 使用 pwsh。
 - 结构查询使用 `codegraph query "符号"`、`codegraph explore "问题"`、`codegraph node "符号"`；调用关系使用 `callers`、`callees`，影响分析使用 `impact` 子命令。
@@ -79,11 +80,11 @@ RTK、CodeGraph 只用命令行，不安装 Pi 插件、不注册 MCP。优先�
 | `hideThinkingBlock`, `showCacheMissNotices`, `collapseChangelog` | `true` |
 | `defaultProjectTrust` | `"always"`；会自动信任并加载项目代码，须说明风险并获使用者确认，否则保持默认 |
 
-不指定模型，其余设置沿用默认值。Windows 设置 `defaultTools = ["read", "powershell", "edit", "write"]`，确认 Pi 支持该工具并实际调用 `pwsh`；Linux/macOS 不设置 `defaultTools`。
+不指定模型，未列出的设置保持原样。Windows 设置 `defaultTools = ["read", "powershell", "edit", "write"]`，确认 Pi 支持该工具并实际调用 `pwsh`；Linux/macOS 不设置 `defaultTools`。
 
 ## 6. Codex 主题
 
-创建 `themes/Codex.json`，`name = "Codex"`，按当前 Pi schema 设置 `colors`；同一行的 token 使用同一颜色：
+创建或更新 `themes/Codex.json`，`name = "Codex"`，按当前 Pi schema 设置 `colors`；同一行的 token 使用同一颜色：
 
 | token | 颜色 |
 |---|---|
@@ -127,10 +128,10 @@ RTK、CodeGraph 只用命令行，不安装 Pi 插件、不注册 MCP。优先�
 
 运行 `pi update --extensions`，重启 Pi 后检查：
 
-- `pi list`：仅包含目标插件，无 RTK/CodeGraph 插件或重复加载。
+- `pi list`：目标插件齐全，已移除确认无用的插件，无 RTK/CodeGraph 插件或重复加载。
 - CLI：CodeGraph 可执行；Linux/macOS 的 RTK 可运行；Windows 终端实际为 pwsh。
 - 界面：Codex 主题、Pi 设置和用量选项生效，无启动错误。
 - MCP：Playwright 能发现工具并打开测试页面。
-- 清理：旧配置无残留，登录信息仍在，未创建备份。
+- 清理：无确认无用的配置残留，可复用配置及登录信息仍在，未创建备份。
 
 沿用已有登录，仅缺失或失效时提示 `/login`、`/multilogin`。简报安装、清理和验证结果，单列阻塞项，不把未验证项记为成功。

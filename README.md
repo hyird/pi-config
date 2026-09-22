@@ -32,7 +32,7 @@ npm:@bacnh85/pi-rtk
 npm:@bacnh85/pi-subagent
 ```
 
-RTK 需在 PATH 中，最低 0.23.0，推荐 ≥ 0.46.0；仅改写 Bash。CodeGraph 在需要索引的项目执行 `codegraph init`。
+Windows 跳过 `npm:@bacnh85/pi-rtk`，不安装 RTK。Linux/macOS 安装该插件，并确保 PATH 中有 RTK ≥ 0.23.0，推荐 ≥ 0.46.0；仅改写 Bash。CodeGraph 在需要索引的项目执行 `codegraph init`。
 
 按插件文档编辑下列选项：
 
@@ -103,6 +103,6 @@ RTK 需在 PATH 中，最低 0.23.0，推荐 ≥ 0.46.0；仅改写 Bash。CodeG
 
 ## 6. 验证
 
-运行 `pi update --extensions` 后重启 Pi。用 `pi list`、`/rtk status` 检查插件；验证主题、界面、用量选项及 MCP 打开测试页面。确认无旧配置残留、重复工具或启动错误。
+运行 `pi update --extensions` 后重启 Pi。用 `pi list` 检查插件，Linux/macOS 另用 `/rtk status` 验证 RTK；验证主题、界面、用量选项及 MCP 打开测试页面。确认无旧配置残留、重复工具或启动错误。
 
 沿用已有登录，仅缺失或失效时提示 `/login`、`/multilogin`。报告已完成、已清理和未解决项，不将未验证内容记为成功。

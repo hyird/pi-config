@@ -16,8 +16,8 @@
 
 | 安装来源 | 用途与配置 |
 |---|---|
-| `npm:@juicesharp/rpiv-ask-user-question` | 结构化提问，使用默认配置 |
-| `npm:pi-goal` | `/goal` 长任务管理，使用默认配置 |
+| `npm:@juicesharp/rpiv-ask-user-question` | 结构化提问 |
+| `npm:pi-goal` | `/goal` 长任务管理 |
 | `npm:@vndv/pi-codegraph` | 代码结构分析；需要索引的项目单独执行 `codegraph init`，不复制其他项目的索引 |
 | `npm:pi-mcp-adapter` | MCP 接入，按第 5 节配置 |
 | `npm:pi-multiprovider` | 多账号管理，用户在本机通过 `/multilogin` 登录 |
@@ -25,7 +25,7 @@
 | `npm:@monotykamary/pi-better-grok` | Grok 用量与状态栏，按下表配置 |
 | `git:github.com/hyird/pi-better-opencode-go` | OpenCode Go 用量，按下表配置 |
 | `npm:@bacnh85/pi-rtk` | Bash 命令优化；确保 PATH 中有 RTK ≥ 0.23.0，推荐 ≥ 0.46.0，使用 `/rtk status` 验证；不改写 PowerShell |
-| `npm:@bacnh85/pi-subagent` | 子代理，使用默认配置 |
+| `npm:@bacnh85/pi-subagent` | 子代理 |
 
 包不钉版本。安装前检查插件与本机 Pi 的版本兼容性；不兼容时报告，不静默换包。
 
@@ -33,9 +33,9 @@
 
 | `D/extensions/` 下的文件 | 设置 |
 |---|---|
-| `pi-better-openai.json` | `usage.enabled = true`、`usage.refreshIntervalMs = 60000`、`usage.autoRedeemBankedResets = false`、`footer.mode = "status"` |
-| `pi-better-grok.json` | `usage.enabled = true`、`usage.refreshIntervalMs = 60000`、`footer.mode = "status"` |
-| `opencode-go-usage.json` | `usage.enabled = true`、`usage.refreshIntervalMs = 60000`、`footer.mode = "status"` |
+| `pi-better-openai.json` | `usage.autoRedeemBankedResets = false`、`footer.mode = "status"` |
+| `pi-better-grok.json` | `footer.mode = "status"` |
+| `opencode-go-usage.json` | `footer.mode = "status"` |
 
 按插件已安装版本的文档编辑这些选项。
 
@@ -46,7 +46,6 @@
 | 字段 | 目标值 |
 |---|---|
 | `packages` | 第 2 节的十个插件，去重 |
-| `transport` | `"auto"` |
 | `theme` | `"Codex"`，先完成第 4 节 |
 | `quietStartup` | `true` |
 | `showHardwareCursor` | `true` |
@@ -58,7 +57,6 @@
 | `hideThinkingBlock` | `true` |
 | `showCacheMissNotices` | `true` |
 | `collapseChangelog` | `true` |
-| `treeFilterMode` | `"default"` |
 | `defaultProjectTrust` | 原配置为 `"always"`；会自动信任项目并允许加载项目代码，说明风险并经使用者确认后设置，否则保留原值 |
 
 模型相关设置保持使用者原样。`lastChangelogVersion` 是机器运行状态，保留本机值。

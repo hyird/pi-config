@@ -3,7 +3,8 @@
     "git:github.com/hyird/pi-better-usage",
     "npm:pi-mcp-adapter",
     "git:github.com/hyird/pi-multiprovider",
-    "npm:pi-codex-goal"
+    "npm:pi-codex-goal",
+    "git:github.com/hyird/oh-my-pi-slim"
   ],
   "theme": "Codex",
   "images": {

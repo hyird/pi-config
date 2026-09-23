@@ -1,0 +1,17 @@
+{
+  "defaultAgent": "council",
+  "models": {
+    "explorer": "openai-codex/gpt-6-sol",
+    "librarian": "openai-codex/gpt-6-luna",
+    "oracle": "openai-codex/gpt-6-astra",
+    "designer": "openai-codex/gpt-6-luna",
+    "fixer": "openai-codex/gpt-6-luna"
+  },
+  "thinking": {
+    "explorer": "high",
+    "librarian": "high",
+    "oracle": "high",
+    "designer": "medium",
+    "fixer": "high"
+  }
+}

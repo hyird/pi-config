@@ -3,7 +3,7 @@
 把这段话交给 LLM：
 
 ```text
-请按 https://raw.githubusercontent.com/hyird/pi-config/main/README.md 从仓库同步我的 Pi 配置。保留本机模型配置、凭据及其他未列出的设置；按文档清理多余插件，完成后核对结果并提示我重启 Pi。
+请按 https://raw.githubusercontent.com/hyird/pi-config/main/README.md 从仓库同步我的 Pi 配置。保留本机主模型配置、凭据及其他未列出的设置；按文档清理多余插件，完成后核对结果并提示我重启 Pi。
 ```
 
 ## 同步范围
@@ -13,10 +13,11 @@
 | 仓库文件 | 用户配置目录下的目标 | 规则 |
 |---|---|---|
 | `settings.json` | `settings.json` | 按键递归覆盖 |
+| `omp.json` | `omp.json` | 整文件覆盖（OMP 主角色、子代理模型与思考强度） |
 | `mcp.json` | `mcp.json` | 按键递归覆盖 |
 | `themes/Codex.json` | `themes/Codex.json` | 整文件覆盖 |
 
-从仓库获取**当前版本**文件。递归覆盖时，对象逐层合并，数组整体替换；仓库未列出的键保留（下述 `extensions`、`skills` 除外），目标文件不存在则创建。**模型配置不参与同步**：保留 `models.json`、`defaultProvider`、`defaultModel`、`enabledModels`、`modelThinkingLevels` 等本机选项；不要从历史提交恢复它们。不备份。
+从仓库获取**当前版本**文件。递归覆盖时，对象逐层合并，数组整体替换；仓库未列出的键保留（下述 `extensions`、`skills` 除外），目标文件不存在则创建。**Pi 主模型配置不参与同步**：保留 `models.json`、`defaultProvider`、`defaultModel`、`enabledModels`、`modelThinkingLevels` 等本机选项；不要从历史提交恢复它们。不备份。`omp.json` 中的子代理模型配置会同步；若目标机器没有启用其中某个模型，OMP 会在加载时切换到可用模型并通知用户。
 
 ## 插件与 skills
 

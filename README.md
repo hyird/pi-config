@@ -3,8 +3,7 @@
 这是 Pi 的配置选项与主题，不含模型配置或凭据。把下面这段话交给 LLM：
 
 ```text
-请按 https://raw.githubusercontent.com/hyird/pi-config/main/README.md 配置我的 Pi。
-从 https://github.com/hyird/pi-config 获取仓库文件：对于 settings.json 和 mcp.json，只覆盖仓库文件中明确列出的选项，保留本机其他选项；themes/Codex.json 整文件覆盖。例外：按下文清理多余的用户级插件和 skills，不保留旧的 extensions/skills 设置项。不要更改模型配置或凭据，不备份。完成后运行 pi update --extensions，重启 Pi 并报告结果。
+请按 https://raw.githubusercontent.com/hyird/pi-config/main/README.md 的规则，从仓库同步我的 Pi 配置。保留本机模型配置和凭据；完成后更新插件、重启 Pi 并报告结果。
 ```
 
 ## 目标目录

@@ -15,10 +15,9 @@
 |---|---|
 | `settings.json` | `settings.json` |
 | `mcp.json` | `mcp.json` |
-| `models.json` | `models.json` |
 | `themes/Codex.json` | `themes/Codex.json` |
 
-对表中每个文件 **无条件整文件覆盖**，不做字段级合并、不备份；目标不存在就创建。只覆盖表中列出的文件，其他文件不清理、不改动。完成覆盖后运行 `pi update --extensions`，重启 Pi，使插件和主题生效。核对 `pi list`、`Codex` 主题及 MCP 连接；如果某项不能运行，报告错误，不擅自更改仓库配置。
+对表中每个文件 **无条件整文件覆盖**，不做字段级合并、不备份；目标不存在就创建。`models.json` 不在同步范围内，保留本机原文件。只覆盖表中列出的文件，其他文件不清理、不改动。完成覆盖后运行 `pi update --extensions`，重启 Pi，使插件和主题生效。核对 `pi list`、`Codex` 主题及 MCP 连接；如果某项不能运行，报告错误，不擅自更改仓库配置。
 
 `settings.json` 中的 `defaultProjectTrust: "always"` 会自动信任项目并加载其代码；覆盖即接受这一行为，只在可信项目目录运行 Pi。MCP 配置要求本机有 Bun 和 Chrome；仓库不包含这些程序。
 

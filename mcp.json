@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "bun",
+      "args": [
+        "x",
+        "--bun",
+        "@playwright/mcp@latest",
+        "--browser",
+        "chrome",
+        "--headless"
+      ],
+      "directTools": true
+    },
+    "context7": {
+      "url": "https://mcp.context7.com/mcp",
+      "protocolVersion": "auto",
+      "directTools": true
+    },
+    "gh_grep": {
+      "url": "https://mcp.grep.app",
+      "protocolVersion": "auto",
+      "directTools": true
+    }
+  }
+}

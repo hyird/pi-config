@@ -1,0 +1,31 @@
+{
+  "packages": [
+    "git:github.com/hyird/pi-better-usage",
+    "npm:pi-mcp-adapter",
+    "git:github.com/hyird/pi-multiprovider"
+  ],
+  "lastChangelogVersion": "0.87.1",
+  "theme": "Codex",
+  "defaultProvider": "opencode-go",
+  "defaultModel": "kimi-k2.6",
+  "images": {
+    "blockImages": true
+  },
+  "showHardwareCursor": true,
+  "terminal": {
+    "clearOnShrink": true,
+    "showTerminalProgress": true
+  },
+  "hideThinkingBlock": true,
+  "showCacheMissNotices": true,
+  "collapseChangelog": true,
+  "quietStartup": true,
+  "defaultProjectTrust": "always",
+  "doubleEscapeAction": "none",
+  "tuiMode": "regular",
+  "enabledModels": [
+    "openai-codex/gpt-6-sol",
+    "openai-codex/gpt-6-luna",
+    "xai/grok-4.7"
+  ]
+}

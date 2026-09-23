@@ -1,0 +1,16 @@
+# Never publish credentials or runtime state.
+auth.json
+accounts.json
+multiprovider-auth.json
+*auth*.json
+*secret*
+*token*
+*.pem
+*.key
+sessions/
+npm/
+git/
+bin/
+*mcp-cache*
+*models-store*
+*.bak*

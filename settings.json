@@ -19,5 +19,8 @@
   "quietStartup": true,
   "defaultProjectTrust": "always",
   "doubleEscapeAction": "none",
-  "tuiMode": "regular"
+  "tuiMode": "fullscreen",
+  "fullscreenCopyOnSelect": true,
+  "fullscreenScrollbar": "always",
+  "fullscreenExitOutput": "transcript"
 }

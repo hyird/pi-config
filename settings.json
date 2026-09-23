@@ -2,7 +2,8 @@
   "packages": [
     "git:github.com/hyird/pi-better-usage",
     "npm:pi-mcp-adapter",
-    "git:github.com/hyird/pi-multiprovider"
+    "git:github.com/hyird/pi-multiprovider",
+    "npm:pi-codex-goal"
   ],
   "theme": "Codex",
   "images": {

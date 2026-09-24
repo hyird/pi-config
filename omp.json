@@ -1,9 +1,9 @@
 {
-  "defaultAgent": "council",
+  "defaultAgent": "orchestrator",
   "models": {
     "explorer": "openai-codex/gpt-6-sol",
     "librarian": "openai-codex/gpt-6-luna",
-    "oracle": "openai-codex/gpt-6-astra",
+    "oracle": "openai-codex/gpt-6-sol",
     "designer": "openai-codex/gpt-6-luna",
     "fixer": "openai-codex/gpt-6-luna"
   },

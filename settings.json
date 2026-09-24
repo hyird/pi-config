@@ -22,6 +22,8 @@
   "defaultProjectTrust": "always",
   "doubleEscapeAction": "none",
   "tuiMode": "fullscreen",
+  "editorPaddingX": 1,
+  "treeFilterMode": "default",
   "fullscreenCopyOnSelect": true,
   "fullscreenScrollbar": "always",
   "fullscreenExitOutput": "transcript"

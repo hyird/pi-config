@@ -1,4 +1,7 @@
 {
+  "settings": {
+    "mcpFooterStatus": "full"
+  },
   "mcpServers": {
     "playwright": {
       "command": "bun",
@@ -10,7 +13,8 @@
         "chrome",
         "--headless"
       ],
-      "directTools": true
+      "directTools": true,
+      "lifecycle": "lazy"
     },
     "context7": {
       "url": "https://mcp.context7.com/mcp",

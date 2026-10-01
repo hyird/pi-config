@@ -1,7 +1,4 @@
 {
-  "settings": {
-    "mcpFooterStatus": "full"
-  },
   "mcpServers": {
     "playwright": {
       "command": "bun",
@@ -13,18 +10,15 @@
         "chrome",
         "--headless"
       ],
-      "directTools": true,
-      "lifecycle": "lazy"
+      "exposure": "direct"
     },
     "context7": {
       "url": "https://mcp.context7.com/mcp",
-      "protocolVersion": "auto",
-      "directTools": true
+      "exposure": "direct"
     },
     "gh_grep": {
       "url": "https://mcp.grep.app",
-      "protocolVersion": "auto",
-      "directTools": true
+      "exposure": "direct"
     }
   }
 }

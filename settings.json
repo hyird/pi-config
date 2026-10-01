@@ -1,30 +1,37 @@
 {
   "packages": [
-    "npm:pi-mcp-adapter",
     "npm:pi-codex-goal",
     "git:github.com/hyird/oh-my-pi-slim",
     "git:github.com/hyird/pi-multiprovider",
-    "git:github.com/hyird/pi-better-usage"
+    "git:github.com/hyird/pi-better-usage",
+    "npm:@davecodes/pi-dcp"
   ],
+  "transport": "sse",
+  "retry": {
+    "maxRetries": 10
+  },
+  "quietStartup": true,
   "theme": "Codex",
+  "showHardwareCursor": true,
   "images": {
     "blockImages": false
   },
-  "showHardwareCursor": true,
   "terminal": {
     "clearOnShrink": true,
     "showTerminalProgress": true
   },
+  "tuiMode": "fullscreen",
+  "editorPaddingX": 1,
   "hideThinkingBlock": true,
   "showCacheMissNotices": true,
   "collapseChangelog": true,
-  "quietStartup": true,
   "defaultProjectTrust": "always",
-  "doubleEscapeAction": "none",
-  "tuiMode": "fullscreen",
-  "editorPaddingX": 1,
   "treeFilterMode": "default",
+  "doubleEscapeAction": "none",
   "fullscreenCopyOnSelect": true,
   "fullscreenScrollbar": "always",
-  "fullscreenExitOutput": "transcript"
+  "fullscreenExitOutput": "transcript",
+  "npmCommand": [
+    "bun"
+  ]
 }

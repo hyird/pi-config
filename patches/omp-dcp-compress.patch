@@ -1,0 +1,150 @@
+# Source checkout commit: bccdfb349e227ba05bc8b0fbf362d6ab6a0c075d
+# Purpose: add compress to every OMP child tool allowlist while keeping MCP tools
+# restricted to librarian; isolate parent-session tests from inherited PI_OMP_CHILD=1.
+# Validation record: 198 tests passed; typecheck not run (tsc unavailable).
+diff --git a/extensions/omp/subagents.ts b/extensions/omp/subagents.ts
+index 86136b5..00d1ebc 100644
+--- a/extensions/omp/subagents.ts
++++ b/extensions/omp/subagents.ts
+@@ -160,6 +160,12 @@ export interface AgentLaunch {
+   thinking?: ThinkingLevel;
+ }
+ 
++function childTools(agent: Role): string[] {
++  const tools = [...ROLES[agent].tools, "compress"];
++  if (agent === "librarian") tools.push("mcp", "mcp__gh_grep__searchGitHub");
++  return tools;
++}
++
+ export function resolveLaunches(
+   ctx: ExtensionContext,
+   items: readonly Assignment[],
+@@ -259,7 +265,7 @@ export async function runAgent(
+     model,
+     thinking,
+     prompt,
+-    ROLES[agent].tools,
++    childTools(agent),
+     resourceSnapshot ?? resourceRevision(ctx.cwd),
+   ]);
+   const lease: TaskSession = ownedSessions.claim(assignment, taskScope(ctx), signature);
+@@ -362,8 +368,7 @@ export async function runAgent(
+             : prompt,
+           { mode: 0o600 },
+         );
+-        const tools: string[] = [...ROLES[agent].tools];
+-        if (agent === "librarian") tools.push("mcp", "mcp__gh_grep__searchGitHub");
++        const tools = childTools(agent);
+         const args = [
+           "--mode",
+           "rpc",
+diff --git a/tests/mcp-policy.test.ts b/tests/mcp-policy.test.ts
+index 8e42764..43d5f73 100644
+--- a/tests/mcp-policy.test.ts
++++ b/tests/mcp-policy.test.ts
+@@ -6,6 +6,7 @@ import omp from "../extensions/omp/index.ts";
+ import { allowedMcpGateway, allowedMcpTool } from "../extensions/omp/mcp-policy.ts";
+ import { runAgent } from "../extensions/omp/subagents.ts";
+ import { childMcpConfig } from "../extensions/omp/child-mcp.ts";
++import { ROLES } from "../extensions/omp/roles.ts";
+ import { updateConfig } from "../extensions/omp/config.ts";
+ 
+ const adapter = (name: string) =>
+@@ -98,7 +99,14 @@ function harness() {
+     isProjectTrusted: () => false,
+     ui: { setStatus: () => {}, notify: () => {}, select: async () => undefined },
+   };
+-  omp(pi);
++  const childMode = process.env.PI_OMP_CHILD;
++  delete process.env.PI_OMP_CHILD;
++  try {
++    omp(pi);
++  } finally {
++    if (childMode === undefined) delete process.env.PI_OMP_CHILD;
++    else process.env.PI_OMP_CHILD = childMode;
++  }
+   const before = () => {
+     const event = { systemPromptOptions: { sections: {} as Record<string, string> } };
+     handlers.before_agent_start(event);
+@@ -348,7 +356,10 @@ test("native child MCP config is role-scoped and librarian launch uses only its
+     expect(captured.childGuard).toBe("1");
+     expect(captured.childRole).toBe("librarian");
+     expect(args[args.indexOf("--tools") + 1].split(",")).toEqual([
+-      "read", "grep", "find", "ls", "bash", "websearch", "mcp", "mcp__gh_grep__searchGitHub",
++      ...ROLES.librarian.tools,
++      "compress",
++      "mcp",
++      "mcp__gh_grep__searchGitHub",
+     ]);
+     expect(args[args.indexOf("--tools") + 1]).not.toMatch(/context7|mcpScript|codemode|tool_search|list_mcp/);
+     expect(captured.prompt).toContain("mcp({server:'gh_grep',tool:'search',args:");
+@@ -360,6 +371,10 @@ test("native child MCP config is role-scoped and librarian launch uses only its
+       const tools = other.args[other.args.indexOf("--tools") + 1];
+       expect(other.childRole).toBe(role);
+       expect(other.args).not.toContain("--mcp-config");
++      expect(tools.split(",")).toEqual([
++        ...ROLES[role].tools,
++        "compress",
++      ]);
+       expect(tools).not.toMatch(/(^|,)(mcp|mcpScript|codemode|tool_search|mcp__[^,]+|list_mcp_resources)(,|$)/);
+     }
+   } finally {
+diff --git a/tests/orchestration-integration.test.ts b/tests/orchestration-integration.test.ts
+index 45b760e..33baebf 100644
+--- a/tests/orchestration-integration.test.ts
++++ b/tests/orchestration-integration.test.ts
+@@ -194,7 +194,14 @@ function harness() {
+       throw new Error("/omp must not modify session state");
+     },
+   };
+-  omp(pi);
++  const childMode = process.env.PI_OMP_CHILD;
++  delete process.env.PI_OMP_CHILD;
++  try {
++    omp(pi);
++  } finally {
++    if (childMode === undefined) delete process.env.PI_OMP_CHILD;
++    else process.env.PI_OMP_CHILD = childMode;
++  }
+   const h = {
+     ctx,
+     commands,
+@@ -719,7 +726,7 @@ test("isolated child uses the configured specialist model and tool allowlist (of
+     expect(recorded.args).not.toContain("--mcp-config"); // adapter is optional for non-Librarians
+     expect(recorded.childGuard).toBe("1");
+     expect(recorded.args).toContain("--no-approve");
+-    expect(recorded.args[recorded.args.indexOf("--tools") + 1]).toBe("read,grep,find,ls,websearch");
++    expect(recorded.args[recorded.args.indexOf("--tools") + 1]).toBe("read,grep,find,ls,websearch,compress");
+     expect(recorded.args[recorded.args.indexOf("--model") + 1]).toBe(
+       "openai-codex/gpt-5.3-codex-spark",
+     );
+diff --git a/tests/rpc-integration.test.ts b/tests/rpc-integration.test.ts
+index 587e6d9..5dcca70 100644
+--- a/tests/rpc-integration.test.ts
++++ b/tests/rpc-integration.test.ts
+@@ -121,6 +121,16 @@ test.each([true, false])(
+           reachedBoundary();
+         });
+       };
++      const parentOmp: ExtensionFactory = (pi) => {
++        const childMode = process.env.PI_OMP_CHILD;
++        delete process.env.PI_OMP_CHILD;
++        try {
++          omp(pi);
++        } finally {
++          if (childMode === undefined) delete process.env.PI_OMP_CHILD;
++          else process.env.PI_OMP_CHILD = childMode;
++        }
++      };
+       const resourceLoader = new DefaultResourceLoader({
+         cwd: root,
+         agentDir: root,
+@@ -130,7 +140,7 @@ test.each([true, false])(
+         noPromptTemplates: true,
+         noThemes: true,
+         noContextFiles: true,
+-        extensionFactories: [boundaryObserver, ...(goalFirst ? [goal, omp] : [omp, goal])],
++        extensionFactories: [boundaryObserver, ...(goalFirst ? [goal, parentOmp] : [parentOmp, goal])],
+       });
+       await resourceLoader.reload();
+       ({ session } = await createAgentSession({

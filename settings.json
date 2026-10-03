@@ -33,5 +33,6 @@
   "fullscreenExitOutput": "transcript",
   "npmCommand": [
     "bun"
-  ]
+  ],
+  "defaultThinkingLevel": "medium"
 }

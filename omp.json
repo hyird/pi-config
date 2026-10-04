@@ -1,17 +1,18 @@
 {
   "defaultAgent": "orchestrator",
+  "fast": true,
   "models": {
-    "explorer": "openai-codex/gpt-6-luna",
-    "librarian": "openai-codex/gpt-6-luna",
+    "explorer": "openai-codex/gpt-6.1-sol",
+    "librarian": "openai-codex/gpt-6.1-sol",
     "oracle": "openai-codex/gpt-6.1-sol",
-    "designer": "openai-codex/gpt-6-luna",
-    "fixer": "openai-codex/gpt-6-luna"
+    "designer": "openai-codex/gpt-6.1-sol",
+    "fixer": "openai-codex/gpt-6.1-sol"
   },
   "thinking": {
-    "explorer": "low",
-    "librarian": "low",
+    "explorer": "high",
+    "librarian": "high",
     "oracle": "high",
-    "designer": "medium",
+    "designer": "high",
     "fixer": "high"
   }
 }

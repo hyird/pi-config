@@ -31,8 +31,6 @@
 
 不得上传或覆盖 `auth.json`、`accounts.json`、会话、插件凭据、缓存及 `npm/`、`git/`、`bin/` 等本机数据；仓库不得包含密钥、token、cookie 或私钥。`defaultProjectTrust: "always"` 会自动信任并加载项目代码，只在可信目录运行 Pi。MCP 配置需要本机安装 Bun 和 Chrome。
 
-## DCP 与 OMP 补丁
+## DCP 配置
 
 `dcp/config.json` 是 DCP 全局配置（不含状态、统计或 prompts）；按需部署到 `~/.pi-dcp/config.json`。它与 `~/.pi/agent` 及项目级 overrides 相互独立。
-
-`patches/omp-dcp-compress.patch` 是针对上游 OMP 的小型补丁，并非 Pi 配置同步内容：将 `compress` 加入子代理白名单，MCP 工具仍仅限 librarian；测试 harness 会隔离父会话继承的 `PI_OMP_CHILD=1`。本次验证记录为 198 项测试通过（因缺少 `tsc` 未运行类型检查）。应用前在 OMP 仓库运行 `git apply --check /path/to/omp-dcp-compress.patch`，成功后再运行 `git apply /path/to/omp-dcp-compress.patch`。若补丁已应用则跳过；若检查不匹配，报告原因并勿强行应用。`pi update` 更新 OMP 插件时可能覆盖补丁涉及的源码；更新后需重新检查并重应用补丁。配置同步不会自动应用补丁或重启 Pi。

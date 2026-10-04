@@ -1,6 +1,7 @@
 {
   "packages": [
     "git:github.com/hyird/pi-codex-goal",
+    "git:github.com/hyird/oh-my-pi-slim",
     "git:github.com/hyird/pi-multiprovider",
     "git:github.com/hyird/pi-better-usage",
     "npm:@davecodes/pi-dcp"
